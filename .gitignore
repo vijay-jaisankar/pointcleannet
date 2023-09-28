@@ -11,3 +11,4 @@
 /outliers_removal/*.pyc
 **/*.pth
 **/*.tar.gz
+**/__pycache__/
