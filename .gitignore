@@ -9,3 +9,5 @@
 /outliers_removal/logs/
 /noise_removal/*.pyc
 /outliers_removal/*.pyc
+**/*.pth
+**/*.tar.gz
