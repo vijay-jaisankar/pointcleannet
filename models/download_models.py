@@ -1,6 +1,6 @@
 import os
 #import zipfile
-import urllib
+import urllib.request
 import tarfile
 import argparse
 
@@ -21,7 +21,7 @@ def download_model(source_url, target_dir, target_file):
         print('downloading ... %d%%' % round(((downloaded*100.0) / total_size)))
 
     print('downloading ... ')
-    urllib.urlretrieve(source_url, filename=target_file, reporthook=show_progress)
+    urllib.request.urlretrieve(source_url, filename=target_file, reporthook=show_progress)
     print('downloading ... done')
 
     print('extracting ...')
