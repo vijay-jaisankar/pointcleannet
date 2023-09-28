@@ -231,6 +231,7 @@ class PointcloudPatchDataset(data.Dataset):
         self.include_clean_points = False
         self.include_original = False
         self.include_outliers = False
+
         for pfeat in self.patch_features:
             if pfeat == 'normal':
                 self.include_normals = True
@@ -264,11 +265,13 @@ class PointcloudPatchDataset(data.Dataset):
         self.shape_patch_count = []
         self.patch_radius_absolute = []
         for shape_ind, shape_name in enumerate(self.shape_names):
-            print('getting information for shape %s' % (shape_name))
+            # print('getting information for shape %s' % (shape_name))
 
             # load from text file and save in more efficient numpy format
             point_filename = os.path.join(self.root, shape_name+'.xyz')
             pts = np.loadtxt(point_filename).astype('float32')
+            print(f'Shape of points for {shape_name} : {pts.shape}')
+            
             np.save(point_filename+'.npy', pts)
 
             if self.include_normals:
@@ -511,3 +514,7 @@ class PointcloudPatchDataset(data.Dataset):
         clean_points_filename = os.path.join(self.root, self.shape_names[shape_ind]+'.clean_xyz') if self.include_clean_points else None
         outliers_filename = os.path.join(self.root, self.shape_names[shape_ind]+'.outliers') if self.include_outliers else None
         return load_shape(point_filename, normals_filename, curv_filename, pidx_filename, clean_points_filename, outliers_filename)
+
+    # Primitive __str__ implementation
+    def __str__(self):
+        return f"OutliersRemoval Dataset with number of patches = {len(self.shape_patch_count)}"

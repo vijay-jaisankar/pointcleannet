@@ -35,6 +35,7 @@ def parse_arguments():
     parser.add_argument('--batchSize', type=int, default=0, help='batch size, if 0 the training batch size is used')
     parser.add_argument('--workers', type=int, default=1, help='number of data loading workers - 0 means same thread as main execution')
     parser.add_argument('--cache_capacity', type=int, default=100, help='Max. number of dataset elements (usually shapes) to hold in the cache at the same time.')
+    parser.add_argument('--verbose', type=int, default=False, help='print debug statements (default: False)')
 
     return parser.parse_args()
 
@@ -43,6 +44,11 @@ def eval_pcpnet(opt):
     # get a list of model names
     if opt.seed < 0:
         opt.seed = random.randint(1, 10000)
+
+    # Load verbose flag
+    verbose_flag = False
+    if opt.verbose:
+        verbose_flag = True
 
     print("Random Seed: %d" % (opt.seed))
     random.seed(opt.seed)
@@ -82,6 +88,11 @@ def eval_pcpnet(opt):
         point_tuple=trainopt.point_tuple,
         sparse_patches=opt.sparse_patches,
         cache_capacity=opt.cache_capacity)
+
+    # Print dataset
+    if verbose_flag:
+        print(dataset)    
+
     if opt.sampling == 'full':
         datasampler = SequentialPointcloudPatchSampler(dataset)
     elif opt.sampling == 'sequential_shapes_random_patches':
@@ -139,6 +150,10 @@ def eval_pcpnet(opt):
         pred, trans, _, _ = regressor(points)
         # don't need to work with autograd variables anymore
         pred = pred.data
+
+        # Verbose flag
+        if verbose_flag:
+            print(f"points shape = {points.shape}, pred shape = {pred.shape}")
         if trans is not None:
             trans = trans.data
         # post-processing of the prediction
