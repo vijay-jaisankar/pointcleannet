@@ -91,7 +91,11 @@ def eval_pcpnet(opt):
 
     # Print dataset
     if verbose_flag:
-        print(dataset)    
+        print(dataset)
+
+    # Print `trainopt`
+    if verbose_flag:
+        print(trainopt)    
 
     if opt.sampling == 'full':
         datasampler = SequentialPointcloudPatchSampler(dataset)
@@ -119,6 +123,11 @@ def eval_pcpnet(opt):
         point_tuple=trainopt.point_tuple)
     regressor.load_state_dict(torch.load(model_filename))
     regressor.cuda()
+
+    # Print the regressor model architecture
+    if verbose_flag:
+        print(regressor)  
+
     shape_ind = 0
     shape_patch_offset = 0
     if opt.sampling == 'full':
